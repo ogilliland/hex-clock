@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title>Hex Clock</title>
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100">
+	<style>
+		* {
+			padding: 0;
+			margin: 0;
+		}
+		
+		.center {
+			margin: auto;
+			position: absolute;
+			top: 50%; left: 50%;
+			-webkit-transform: translate(-50%,-50%);
+			-ms-transform: translate(-50%,-50%);
+			transform: translate(-50%,-50%);
+		}
+		
+		#hex {
+			color: rgba(255, 255, 255, 0.9);
+			font-family: 'Roboto', Helvetica, Arial, sans-serif;
+			font-size: 5em;
+			font-weight: 100;
+			text-align: center;
+		}
+	</style>
+</head>
+<body>
+	<div class="center">
+		<p id="hex">#000000</p>
+	</div>
+	<script>
+		function update() {
+			var date = new Date();
+			var h = date.getHours();
+			var m = date.getMinutes();
+			var s = date.getSeconds();
+
+			// add leading zeros
+			h = ('0' + h).slice(-2);
+			m = ('0' + m).slice(-2);
+			s = ('0' + s).slice(-2);
+
+			var hex = '#' + h + m + s;
+			document.getElementById('hex').innerHTML = hex;
+			document.body.style.backgroundColor = hex;
+		}
+		
+		update();
+		setInterval(update, 1000);
+	</script>
+</body>
+</html>
