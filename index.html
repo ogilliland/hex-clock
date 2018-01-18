@@ -19,18 +19,29 @@
 			transform: translate(-50%,-50%);
 		}
 		
-		#hex {
+		p {
 			color: rgba(255, 255, 255, 0.9);
 			font-family: 'Roboto', Helvetica, Arial, sans-serif;
-			font-size: 5em;
 			font-weight: 100;
 			text-align: center;
+		}
+
+		#hex {
+			font-size: 5em;
+			display: inline;
+		}
+
+		#hex-symbol {
+			font-size: 3.5em;
+			display: inline;
+			padding-right: 4px;
 		}
 	</style>
 </head>
 <body>
 	<div class="center">
-		<p id="hex">#000000</p>
+		<p id="hex-symbol">#</p>
+		<p id="hex">000000</p>
 	</div>
 	<script>
 		function update() {
@@ -44,9 +55,9 @@
 			m = ('0' + m).slice(-2);
 			s = ('0' + s).slice(-2);
 
-			var hex = '#' + h + m + s;
+			var hex = h + m + s;
 			document.getElementById('hex').innerHTML = hex;
-			document.body.style.backgroundColor = hex;
+			document.body.style.backgroundColor = '#' + hex;
 		}
 		
 		update();
