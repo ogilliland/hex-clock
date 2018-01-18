@@ -1,2 +1,2 @@
-# hex-clock
-Visualizing the color of time
+# Hex Clock
+An experiment in representing time with color. Yes, it's always dark
