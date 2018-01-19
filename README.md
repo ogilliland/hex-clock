@@ -1,2 +1,8 @@
 # Hex Clock
-An experiment in representing time with color. Yes, it's always dark
+An experiment in representing time with color
+
+Hours -> lightness
+
+Minutes -> hue
+
+Seconds -> saturation

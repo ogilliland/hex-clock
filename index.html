@@ -9,7 +9,7 @@
 			padding: 0;
 			margin: 0;
 		}
-		
+
 		.center {
 			margin: auto;
 			position: absolute;
@@ -18,50 +18,109 @@
 			-ms-transform: translate(-50%,-50%);
 			transform: translate(-50%,-50%);
 		}
-		
+
 		p {
 			color: rgba(255, 255, 255, 0.9);
 			font-family: 'Roboto', Helvetica, Arial, sans-serif;
+		}
+
+		#time {
+			font-size: 7.5em;
 			font-weight: 100;
 			text-align: center;
 		}
 
 		#hex {
-			font-size: 5em;
-			display: inline;
-		}
-
-		#hex-symbol {
-			font-size: 3.5em;
-			display: inline;
-			padding-right: 4px;
+			font-size: 2em;
+			font-weight: 100;
+			text-align: center;
 		}
 	</style>
 </head>
 <body>
 	<div class="center">
-		<p id="hex-symbol">#</p>
-		<p id="hex">000000</p>
+		<p id="time">00:00:00</p>
+		<p id="hex">#000000</p>
 	</div>
 	<script>
-		function update() {
-			var date = new Date();
-			var h = date.getHours();
-			var m = date.getMinutes();
-			var s = date.getSeconds();
+		function HSVtoRGB(h, s, v) {
+			var r, g, b, i, f, p, q, t;
 
-			// add leading zeros
+			i = Math.floor(h * 6);
+			f = h * 6 - i;
+			p = v * (1 - s);
+			q = v * (1 - f * s);
+			t = v * (1 - (1 - f) * s);
+			
+			switch (i % 6) {
+				case 0: r = v, g = t, b = p; break;
+				case 1: r = q, g = v, b = p; break;
+				case 2: r = p, g = v, b = t; break;
+				case 3: r = p, g = q, b = v; break;
+				case 4: r = t, g = p, b = v; break;
+				case 5: r = v, g = p, b = q; break;
+			}
+
+			return {
+				'R': Math.round(r * 255),
+				'G': Math.round(g * 255),
+				'B': Math.round(b * 255)
+			};
+		}
+
+		function getColor(h, m, s, ms) {
+			// define time as HSV
+			var lightness = 1 - Math.abs((h + m/59)/12 - 1); // hours as lightness
+			var hue = m/59; // minutes as hue
+			var saturation = (s + ms/999)/60; // seconds as saturation
+
+			// tween large color differences
+			if(s == 0) {
+				saturation = Math.max(1 - (ms/500), 0);
+			}
+
+			color = HSVtoRGB(hue, saturation, lightness);
+			return color;
+		}
+
+		function getHex(h, m, s, ms) {
+			var color = getColor(h, m, s, ms);
+
+			// convert to hex
+			var hex = { 'R': 0, 'G': 0, 'B': 0 };
+			hex['R'] = ('0' + color['R'].toString(16)).slice(-2);
+			hex['G'] = ('0' + color['G'].toString(16)).slice(-2);
+			hex['B'] = ('0' + color['B'].toString(16)).slice(-2);
+
+			var hex = ('#' + hex['R'] + hex['G'] + hex['B']).toUpperCase();
+			return hex;
+		}
+
+		function getTime(h, m, s) {
+			// add leading zeros for time
 			h = ('0' + h).slice(-2);
 			m = ('0' + m).slice(-2);
 			s = ('0' + s).slice(-2);
 
-			var hex = h + m + s;
-			document.getElementById('hex').innerHTML = hex;
-			document.body.style.backgroundColor = '#' + hex;
+			var time = h + ':' + m + ':' + s;
+			return time;
 		}
-		
+
+		function update() {
+			var date = new Date();
+			var d = date.getDay();
+			var h = date.getHours();
+			var m = date.getMinutes();
+			var s = date.getSeconds();
+			var ms = date.getMilliseconds();
+
+			document.getElementById('hex').innerHTML = getHex(h, m, s, 999);
+			document.body.style.backgroundColor = getHex(h, m, s, ms);
+			document.getElementById('time').innerHTML = getTime(h, m, s);
+		}
+
 		update();
-		setInterval(update, 1000);
+		setInterval(update, 50);
 	</script>
 </body>
 </html>
