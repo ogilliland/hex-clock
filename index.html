@@ -72,11 +72,11 @@
 			// define time as HSV
 			var lightness = 1 - Math.abs((h + m/59)/12 - 1); // hours as lightness
 			var hue = m/59; // minutes as hue
-			var saturation = (s + ms/999)/60; // seconds as saturation
+			var saturation = 0.25 + 0.75 * (s + ms/999)/60; // seconds as saturation
 
 			// tween large color differences
 			if(s == 0) {
-				saturation = Math.max(1 - (ms/500), 0);
+				saturation = Math.max(1 - 0.75 * (ms/500), 0.25);
 			}
 
 			color = HSVtoRGB(hue, saturation, lightness);
